@@ -43,7 +43,7 @@ module.exports.contact = async (req, res) => {
                 else {
                     res.status(200).json('Your message has been sent!')
                 }
-            })
+            });
         }
     } catch (error) {
         res.status(500).json(error.message)

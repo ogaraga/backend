@@ -9,4 +9,4 @@ const messageSchema = new mongoose.Schema({
     receiverId: String
 },{timestamps:true});
 
-module.exports= mongoose.model('Message',messageSchema)
+module.exports= mongoose.model('Message',messageSchema);

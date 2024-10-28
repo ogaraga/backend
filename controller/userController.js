@@ -21,7 +21,7 @@ module.exports.register = async (req, res) => {
             res.status(400).json('Entered email is invalid!')
         }
         else if (!validate.isDate(dob)) {
-            res.status(400).json('Invalid date entered!')
+            res.status(400).json('Invalid date entered!');
         }
 
         else if (phone.length < 11 && !txt.test(phone)) {
