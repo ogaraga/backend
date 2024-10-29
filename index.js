@@ -19,11 +19,11 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const store = new MongoDBStore({
     uri: process.env.DATA_BASE,
     collection: 'Socialweb',
-    expires: 1800000, 
+    expires: 1800000,
     connectionOptions: {
         serverSelectionTimeoutMS: 100000
     }
-}); 
+});
 //use session for protected routes
 app.use(session({
     secret: process.env.SESSION_KEY,
@@ -40,18 +40,22 @@ app.use(session({
 //app middleware and session  here 
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.urlencoded({ extended: true })); 
+app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     origin: "https://frontends-psi.vercel.app",
     methods: ['POST', 'GET', 'PUT', 'DELETE'],
-    credentials: true 
-}));    
+    credentials: true
+}));
 app.use('/', allRoutes);
+//Get Api home page
+app.get('/', (req, res) => {
+    res.send('Welcome to home page!')
+});
 //listening on port 
 server.listen((port), () => {
 
     console.log(`Server running on port:${port}`)
-});    
+});
 
 // https://backends-mocha-nine.vercel.app
 // https://frontends-psi.vercel.app
