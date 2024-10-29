@@ -19,7 +19,7 @@
     },
     {
       "functions": {
-        "index/**/*": {
+        "/(.*)/**/*": {
           "maxDuration": 60
         }
       }
