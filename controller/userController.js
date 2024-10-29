@@ -68,7 +68,6 @@ module.exports.login = async (req, res) => {
                 res.status(400).json('Password is incorrect, try again or reset your password!')
             } else {
                 const token = await JWT.sign({ id: user._id, email: user }, process.env.AUTH_SECRET, { expiresIn: '30m' });
-                req.session.id = true;
                 req.session.token = token;
                 res.cookie('Access', token, { httpOnly: true })
                 res.status(200).json({ token: token, id: req.session.id, _id: user._id })
