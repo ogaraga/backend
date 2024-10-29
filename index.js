@@ -46,7 +46,7 @@ app.use(cors({
     methods: ['POST', 'GET', 'PUT', 'DELETE'],
     credentials: true 
 }));    
-app.use(allRoutes);
+app.use('/', allRoutes);
 //listening on port 
 server.listen((port), () => {
 
