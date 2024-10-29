@@ -47,11 +47,7 @@ app.use(cors({
     credentials: true
 }));
 app.use(allRoutes);
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "https://frontends-psi.vercel.app");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
+
 
 //listening on port 
 server.listen((port), () => {
