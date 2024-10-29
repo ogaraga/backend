@@ -19,7 +19,7 @@
     }
   ],  
     "functions": {
-      "path/to/dir/**/*": {
+      "app/api/**/*": {
         "maxDuration": 60 
       }
     }
