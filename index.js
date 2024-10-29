@@ -42,8 +42,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: ["https://frontends-psi.vercel.app"],
-    methods: ['POST', 'GET', 'PUT', 'DELETE'],
+    origin: "https://frontends-psi.vercel.app",
+    methods: ['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
 }));
 app.use('/', allRoutes);
