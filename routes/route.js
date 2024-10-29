@@ -10,6 +10,10 @@ const {getNews} = require('../controller/getNewsController');
 const { contact } = require('../controller/contactUsController');
 contact
 
+//Get Api home page
+router.get('/', (req, res) => {
+    res.send('Welcome to home page!')
+});
 //login route
 router.post('/api_v1/signin', login)
 
