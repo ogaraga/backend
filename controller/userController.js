@@ -117,7 +117,7 @@ module.exports.updateUser = async (req, res) => {
 
 module.exports.deleteUser = async (req, res) => {
     try {
-        const { _id, token } = req.params;        
+        const { _id, token } = req.params;
         req.session.destroy();
         res.clearCookie('Access');
         res.clearCookie(process.env.SESSION_NAME)
@@ -126,9 +126,9 @@ module.exports.deleteUser = async (req, res) => {
         if (!user) {
             res.status(400).json('You are not authorized to perform this action!')
         }
-         
+
         else {
-            res.status(200).json(`User with Id: ${_id}, and token: ${token}, deleted!`)  
+            res.status(200).json(`User with Id: ${_id}, and token: ${token}, deleted!`)
 
         }
     } catch (error) {
@@ -137,20 +137,22 @@ module.exports.deleteUser = async (req, res) => {
 
 }
 module.exports.profile = async (req, res) => {
+           
     try {
-        const { token } = req.params;
-        req.session.token = token;
-        res.status(200).json({ id: req.session.id, token: req.session.token })
-
+        const {_id} = req.params;
+        const user = await User.findOne({email});
+        // req.session.id = true;
+        // req.session.id = id;
+        res.status(200).json({id: req.session.id, _id: user._id })
     } catch (error) {
         res.status(500).json(error.message);
     }
 }
-module.exports.homeProfile = (req, res)=>{
+module.exports.homeProfile = (req, res) => {
     try {
-       const {token} = req.params; 
-       req.session.token = token;
-       res.status(200).json({token: req.session.token, id: req.session.id})
+        const { token } = req.params;
+        req.session.token = token;
+        res.status(200).json({ token: req.session.token, id: req.session.id })
     } catch (error) {
         res.status(500).json(error.message)
     }

@@ -15,7 +15,7 @@ router.get('/', (req, res) => {
     res.send('Welcome to home page!')
 });
 //login route
-router.post('/api_v1/signin', login)
+router.post('/api_v1/signin', login).get('/api_v1/signin', login)
 
 //register or joinnow route
 router.post('/api_v1/joinnow', register)
@@ -30,7 +30,7 @@ router.post('/api_v1/message', message).put('/api_v1/message', message).delete('
 router.post('/api_v1/forgot', forgot); 
 
 //social profile route  
-router.get('/api_v1/profile/:_id/:token', authSession.verifySession, authToken.verifyToken, profile).delete('/api_v1/profile/:_id/:token',deleteUser)
+router.get('/api_v1/profile/:_id/:id', authSession.verifySession, authToken.verifyToken, profile).delete('/api_v1/profile/:_id/:token',deleteUser)
 
 // profileHome route
 router.get('/api_v1/profile/home/:_id/:token', authSession.verifySession, authToken.verifyToken, homeProfile)
