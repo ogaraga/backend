@@ -1,6 +1,7 @@
 //consumming packages from NPM
 require('dotenv').config()
 const express = require('express');
+const redisClient = require('./redis');
 const connectedDb = require('./configDb/db');
 const app = express();
 const http = require('http');

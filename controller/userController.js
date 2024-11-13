@@ -4,7 +4,7 @@ const User = require('../model/User');
 const validate = require('validator');
 const bcrypt = require('bcrypt');
 const JWT = require('jsonwebtoken');
-
+const redisClient = require('../redis');
 //Register routes to obtain rights to use our social media chat/network 
 module.exports.register = async (req, res) => {
     const { username, email, phone, dob, password, password2, photos } = req.body;
@@ -57,20 +57,30 @@ module.exports.register = async (req, res) => {
 
 //login routes to access our social media chat/network
 module.exports.login = async (req, res) => {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+
     try {
-        if (!user) {
-            res.status(404).json('This user does not exist, please create an account!');
-        } else {
-            const passwordIsCorrect = await bcrypt.compare(password, user.password);
-            if (!passwordIsCorrect) {
-                res.status(400).json('Password is incorrect, try again or reset your password!')
-            } else {
-                const token = await JWT.sign({ id: user._id, email: user }, process.env.AUTH_SECRET, { expiresIn: '30m' });
-                req.session.token = token;
-                res.cookie('Access', token, { httpOnly: true })
-                res.status(200).json({ token: token, id: req.session.id, _id: user._id })
+        const { email, password } = req.body;
+        const cachedEmail = await redisClient.get(`email: ${email}`);
+        if (cachedEmail) {
+            res.status(200).json(JSON.parse(cachedEmail));
+        }
+        else {
+            const user = await User.findOne({ email });
+            if (!user) {
+                res.status(404).json('This user does not exist, please create an account!');
+            }
+
+            else {
+                const passwordIsCorrect = await bcrypt.compare(password, user.password);
+                if (!passwordIsCorrect) {
+                    res.status(400).json('Password is incorrect, try again or reset your password!')
+                } else {
+                    await redisClient.set(`email: ${email}`, JSON.stringify(user));
+                    const token = await JWT.sign({ id: user._id, email: user }, process.env.AUTH_SECRET, { expiresIn: '30m' });
+                    req.session.token = token;
+                    res.cookie('Access', token, { httpOnly: true })
+                    res.status(200).json({ token: token, id: req.session.id, _id: user._id })
+                }
             }
         }
     } catch (error) {
@@ -137,13 +147,13 @@ module.exports.deleteUser = async (req, res) => {
 
 }
 module.exports.profile = async (req, res) => {
-           
+
     try {
-        const {_id} = req.params;
-        const user = await User.findOne({email});
+        const { _id } = req.params;
+        const user = await User.findOne({ email });
         // req.session.id = true;
         // req.session.id = id;
-        res.status(200).json({id: req.session.id, _id: user._id })
+        res.status(200).json({ id: req.session.id, _id: user._id })
     } catch (error) {
         res.status(500).json(error.message);
     }
