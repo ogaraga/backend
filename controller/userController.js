@@ -60,7 +60,7 @@ module.exports.login = async (req, res) => {
 
     try {
         const { email, password } = req.body;
-        const cachedEmail = await redisClient.get(`email: ${email}`);
+        const cachedEmail = await redisClient.get(`Email: ${email}`);
         if (cachedEmail) {
             res.status(200).json(JSON.parse(cachedEmail));
         }
@@ -75,7 +75,7 @@ module.exports.login = async (req, res) => {
                 if (!passwordIsCorrect) {
                     res.status(400).json('Password is incorrect, try again or reset your password!')
                 } else {
-                    await redisClient.set(`email: ${email}`, JSON.stringify(user));
+                    await redisClient.set(`Email: ${email}`, JSON.stringify(user));
                     const token = await JWT.sign({ id: user._id, email: user }, process.env.AUTH_SECRET, { expiresIn: '30m' });
                     req.session.token = token;
                     res.cookie('Access', token, { httpOnly: true })

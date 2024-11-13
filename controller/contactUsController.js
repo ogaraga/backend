@@ -11,7 +11,7 @@ const redisClient = require('../redis');
 module.exports.contact = async (req, res) => {
     try {
         const { username, email, subject, message } = req.body;
-        const cachedEmail = await redisClient.get(`email: ${email}`);
+        const cachedEmail = await redisClient.get(`Email: ${email}`);
         if (cachedEmail) {
             res.status(200).json(JSON.parse(cachedEmail));
         } else {
@@ -19,7 +19,7 @@ module.exports.contact = async (req, res) => {
             if (!user) {
                 res.status(404).json('Please create an account before you can contact us')
             } else {
-                await redisClient.set(`email: ${email}`, JSON.stringify(user));
+                await redisClient.set(`Email: ${email}`, JSON.stringify(user));
                 if (validate.isEmpty(username) || validate.isEmpty(email) || validate.isEmpty(subject) || validate.isEmpty(message)) {
                     res.status(400).json('All fields are required!')
                 } else if (username.length < 3 || subject.length < 6 || message.length < 20) {
