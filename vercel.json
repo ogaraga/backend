@@ -19,10 +19,13 @@
     } ,
     {
       "functions": {
-        "/api_v1/**/*.js": {
-          "maxDuration": 60
-        }
-      }
-    }  
+    "api/route.js": {      
+      "maxDuration": 60
+    },
+    "api/*.js": {
+      "maxDuration": 60
+    } 
+    }
+    } 
   ]
 }
