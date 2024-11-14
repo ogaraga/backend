@@ -61,17 +61,14 @@ module.exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
         // const hashedPassword = await bcrypt.hash(password, 10)
-        
-        const token = await JWT.sign({email}, process.env.AUTH_SECRET, { expiresIn: '30m' });
-        const cachedEmail = await redisClient.get(`Email:${email, password, token}`);
+        const cachedEmail = await redisClient.get(`Email:${email,password}`);
         let response = null;
         if (cachedEmail) {
             response = {
                 mgs: 'Email Found!',
                 status: '200',                
             }
-            res.cookie('Access', token, { httpOnly: true })
-            res.status(200).json(JSON.parse(response));            
+            res.status(200).json(response);            
         }
         else {
             const user = await User.findOne({ email });

@@ -11,16 +11,14 @@ const redisClient = require('../redis');
 module.exports.contact = async (req, res) => {
     try {
         const { username, email, subject, message } = req.body;
-        const token = await JWT.sign({email}, process.env.AUTH_SECRET, { expiresIn: '30m' });
-        const cachedEmail = await redisClient.get(`Email:${email, token}`);
+        const cachedEmail = await redisClient.get(`Email:${email}`);
         let response = null;
         if (cachedEmail) {
             response = {
                 mgs: 'Email Found!',
-                status: '200',                
+                status: '200',
             }
-            res.cookie('Access', token, { httpOnly: true })
-            res.status(200).json(JSON.parse(response));     
+            res.status(200).json(response);
         } else {
             const user = await User.findOne({ email });
             if (!user) {
