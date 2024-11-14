@@ -80,7 +80,7 @@ module.exports.login = async (req, res) => {
                     const token = await JWT.sign({ id: user._id, email: user }, process.env.AUTH_SECRET, { expiresIn: '30m' });
                     req.session.token = token;
                     res.cookie('Access', token, { httpOnly: true })
-                    await redisClient.set(`Email:${email}, Password:${hashedPassword}`, JSON.stringify({ token: token, id: req.session.id, _id: user._id }));
+                    await redisClient.set(`Email:${email}, Password:${hashedPassword}`, JSON.stringify(user));
                     res.status(200).json({ token: token, id: req.session.id, _id: user._id })
                 }
             }
