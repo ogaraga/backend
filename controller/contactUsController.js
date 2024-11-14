@@ -13,7 +13,7 @@ module.exports.contact = async (req, res) => {
         const { username, email, subject, message } = req.body;
         const cachedEmail = await redisClient.get(`Email:${email}`);
         if (cachedEmail) {
-            res.status(200).json(JSON.parse(cachedEmail));
+            res.status(200).json(cachedEmail);
         } else {
             const user = await User.findOne({ email });
             if (!user) {
