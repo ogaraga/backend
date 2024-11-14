@@ -19,7 +19,7 @@
     } ,
     {
       "functions": {
-        "app/api/**/route.js": {
+        "/api_v1/**/*.js": {
           "maxDuration": 60
         }
       }
