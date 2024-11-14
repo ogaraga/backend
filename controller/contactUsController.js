@@ -52,7 +52,7 @@ module.exports.contact = async (req, res) => {
                             res.status(400).json(err.message)
                         }
                         else {
-                            await redisClient.set(`Email:${email}`, JSON.stringify(newUser))
+                            await redisClient.set(`Email:${email}`, JSON.stringify('Your message has been sent!'))
                             res.status(200).json('Your message has been sent!')
                         }
                     });
