@@ -60,7 +60,8 @@ module.exports.login = async (req, res) => {
 
     try {
         const { email, password } = req.body;
-        const cachedEmail = await redisClient.get(`Email:${email}, Password:${password}`);
+        const hashedPassword = await bcrypt.hash(password, 10)
+        const cachedEmail = await redisClient.get(`Email:${email}, Password:${hashedPassword}`);
         if (cachedEmail) {
             res.status(200).json(JSON.parse(cachedEmail));
         }
@@ -79,7 +80,7 @@ module.exports.login = async (req, res) => {
                     const token = await JWT.sign({ id: user._id, email: user }, process.env.AUTH_SECRET, { expiresIn: '30m' });
                     req.session.token = token;
                     res.cookie('Access', token, { httpOnly: true })
-                    await redisClient.set(`Email:${email}, Password:${password}`, JSON.stringify({ token: token, id: req.session.id, _id: user._id }));
+                    await redisClient.set(`Email:${email}, Password:${hashedPassword}`, JSON.stringify({ token: token, id: req.session.id, _id: user._id }));
                     res.status(200).json({ token: token, id: req.session.id, _id: user._id })
                 }
             }
