@@ -61,14 +61,17 @@ module.exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
         // const hashedPassword = await bcrypt.hash(password, 10)
-        const cachedEmail = await redisClient.get(`Email:${email,password}`);
+        
+        const token = await JWT.sign({email}, process.env.AUTH_SECRET, { expiresIn: '30m' });
+        const cachedEmail = await redisClient.get(`Email:${email, password, token}`);
         let response = null;
         if (cachedEmail) {
             response = {
                 mgs: 'Email Found!',
                 status: '200',                
             }
-            res.status(200).json(response);            
+            res.cookie('Access', token, { httpOnly: true })
+            res.status(200).json(JSON.parse(response));            
         }
         else {
             const user = await User.findOne({ email });
@@ -82,7 +85,7 @@ module.exports.login = async (req, res) => {
                     res.status(400).json('Password is incorrect, try again or reset your password!')
                 } else {
                     
-                    const token = await JWT.sign({ id: user._id, email: user }, process.env.AUTH_SECRET, { expiresIn: '30m' });
+                    const token = await JWT.sign({ id: user._id, email: user.email }, process.env.AUTH_SECRET, { expiresIn: '30m' });
                     req.session.token = token;
                     res.cookie('Access', token, { httpOnly: true })
                     await redisClient.set(`Email:${email, password}`, JSON.stringify({ token: token, id: req.session.id, _id: user._id }));
