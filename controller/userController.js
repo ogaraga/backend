@@ -62,13 +62,10 @@ module.exports.login = async (req, res) => {
         const { email, password } = req.body;
         // const hashedPassword = await bcrypt.hash(password, 10)
         const cachedEmail = await redisClient.get(`Email:${email,password}`);
-        let response = null;
+     
         if (cachedEmail) {
-            response = {
-                mgs: 'Email Found!',
-                status: '200',                
-            }
-            res.status(200).json(response);            
+        
+            res.status(200).json(JSON.parse(cachedEmail));            
         }
         else {
             const user = await User.findOne({ email });
