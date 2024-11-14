@@ -18,7 +18,7 @@ module.exports.contact = async (req, res) => {
                 mgs: 'Email Found!',
                 status: '200',
             }
-            res.status(200).json(JSON.parse(response));
+            res.status(200).json(response);
         } else {
             const user = await User.findOne({ email });
             if (!user) {
