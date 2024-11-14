@@ -62,7 +62,7 @@ module.exports.login = async (req, res) => {
         const { email, password } = req.body;
         const cachedEmail = await redisClient.get(`Email`);
         if (cachedEmail) {
-            res.status(200).json(JSON.parse(cachedEmail));
+            res.status(200).json(cachedEmail);
         }
         else {
             const user = await User.findOne({ email });
